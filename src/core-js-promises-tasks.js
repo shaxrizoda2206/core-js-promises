@@ -18,12 +18,16 @@
  * 1    => promise that will be fulfilled
  */
 function getPromise(number) {
-  return new Promise((resolve, reject) => {
+  const promise = new Promise((resolve, reject) => {
     if (number >= 0) {
       resolve(number);
+    } else {
+      reject(new Error('Number is negative!'));
     }
-    reject(new Error('Number should be greater than 0'));
   });
+
+  promise.then((res) => res).catch((err) => err);
+  return promise;
 }
 
 /**
@@ -39,7 +43,10 @@ function getPromise(number) {
  * Promise.reject('fail')     => promise that will be fulfilled with 'fail' value
  */
 function getPromiseResult(source) {
-  return source.then(() => 'success').catch(() => 'fail');
+  return source.then(
+    () => 'success',
+    () => 'fail'
+  );
 }
 
 /**
@@ -56,7 +63,8 @@ function getPromiseResult(source) {
  * [Promise.reject(1), Promise.reject(2), Promise.reject(3)]    => Promise rejected
  */
 function getFirstResolvedPromiseResult(promises) {
-  return Promise.any(promises);
+  const promise = Promise.any(promises);
+  return promise;
 }
 
 /**
@@ -79,7 +87,8 @@ function getFirstResolvedPromiseResult(promises) {
  * [promise3, promise4, promise6] => Promise rejected with 6
  */
 function getFirstPromiseResult(promises) {
-  return Promise.race(promises);
+  const promise = Promise.race(promises);
+  return promise;
 }
 
 /**
@@ -94,7 +103,8 @@ function getFirstPromiseResult(promises) {
  * [Promise.resolve(1), Promise.reject(2), Promise.resolve(3)] => Promise rejected with 2
  */
 function getAllOrNothing(promises) {
-  return Promise.all(promises);
+  const result = Promise.all(promises);
+  return result;
 }
 
 /**
@@ -111,8 +121,8 @@ function getAllOrNothing(promises) {
  */
 function getAllResult(promises) {
   return Promise.allSettled(promises).then((results) =>
-    results.map((result) =>
-      result.status === 'fulfilled' ? result.value : null
+    results.map((resObj) =>
+      resObj.status === 'fulfilled' ? resObj.value : null
     )
   );
 }
@@ -136,11 +146,11 @@ function getAllResult(promises) {
  * [promise1, promise4, promise3, promise2] => Promise.resolved('10403020')
  */
 function queuePromises(promises) {
-  return promises.reduce(
-    (acc, promise) =>
-      acc.then((result) => promise.then((value) => result + value)),
-    Promise.resolve('')
-  );
+  return promises.reduce((chain, currentPromise) => {
+    return chain.then((result) => {
+      return currentPromise.then((value) => result + value.toString());
+    });
+  }, Promise.resolve(''));
 }
 
 module.exports = {
