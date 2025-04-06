@@ -6,6 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
+.idea/
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
@@ -129,7 +130,5 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-/src/_core-js-promises-tasks.js
-/src/__core-js-promises-tasks.js
-/.editorconfig
-/package-lock.json
+package.json
+package-lock.json
